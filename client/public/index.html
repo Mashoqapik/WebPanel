@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASHOQAPIK - BUTCHER PANEL</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+        body {
+            background: #000000;
+            color: #ff003c;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+            line-height: 1.4;
+        }
+
+        /* Scanlines CRT */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(255, 0, 60, 0.02) 0px,
+                rgba(255, 0, 60, 0.02) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            animation: scanlines 8s linear infinite;
+            z-index: 999;
+        }
+
+        @keyframes scanlines {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 10px; }
+        }
+
+        /* LOGIN SCREEN */
+        .login-screen {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #000000;
+        }
+
+        .login-screen.hidden {
+            display: none;
+        }
+
+        .ascii-title {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.1;
+            white-space: pre;
+            background: linear-gradient(90deg, #00bfff, #7a00ff, #ff003c, #00bfff);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 0, 60, 0.5);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 500px;
+            padding: 0 20px;
+        }
+
+        .login-field {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .login-field label {
+            color: #ff003c;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px rgba(255, 0, 60, 0.3);
+        }
+
+        .login-input {
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ff003c;
+            color: #ff003c;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            box-shadow: 0 0 15px rgba(255, 0, 60, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: #7a00ff;
+            box-shadow: 0 0 25px rgba(122, 0, 255, 0.5);
+            color: #7a00ff;
+        }
+
+        .login-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #ff003c, #7a00ff);
+            color: #000000;
+            border: 2px solid #ff003c;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
+        }
+
+        .login-button:hover {
+            box-shadow: 0 0 30px rgba(122, 0, 255, 0.6);
+            transform: scale(1.02);
+        }
+
+        /* PANEL MAIN */
+        .panel-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #000000;
+        }
+
+        .panel-container.hidden {
+            display: none;
+        }
+
+        .panel-header {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.95);
+            border-bottom: 2px solid #ff003c;
+            border-left: 2px solid #7a00ff;
+            border-right: 2px solid #00bfff;
+        }
+
+        .panel-title {
+            font-size: 10px;
+            line-height: 1;
+            font-weight: 700;
+            white-space: pre;
+            background: linear-gradient(90deg, #00bfff, #7a00ff, #ff003c, #00bfff);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            margin-bottom: 10px;
+        }
+
+        .panel-menu {
+            display: flex;
+            gap: 40px;
+            padding: 8px 15px;
+            border: 1px solid #7a00ff;
+            border-right: 1px solid #00bfff;
+            border-bottom: 1px solid #ff003c;
+        }
+
+        .menu-item {
+            color: #7a00ff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(122, 0, 255, 0.3);
+        }
+
+        .panel-submenu {
+            display: flex;
+            gap: 20px;
+            padding: 8px 15px;
+            color: #00bfff;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(0, 191, 255, 0.3);
+        }
+
+        .panel-controls {
+            display: flex;
+            gap: 15px;
+            padding: 8px 15px;
+            border: 1px solid #ff003c;
+            color: #ff003c;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(255, 0, 60, 0.3);
+        }
+
+        .panel-content {
+            flex: 1;
+            padding: 15px 20px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.95);
+            border-left: 1px solid rgba(255, 0, 60, 0.1);
+            border-right: 1px solid rgba(255, 0, 60, 0.1);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .content-line {
+            color: #ff003c;
+            margin: 2px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            text-shadow: 0 0 2px rgba(255, 0, 60, 0.1);
+        }
+
+        .panel-input-area {
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.98);
+            border-top: 2px solid #ff003c;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .prompt {
+            color: #ff003c;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 0 3px rgba(255, 0, 60, 0.2);
+        }
+
+        .terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #ff003c;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            outline: none;
+            caret-color: #ff003c;
+            letter-spacing: 0.3px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: #ff003c;
+            margin-left: 2px;
+            animation: blink 1s step-end infinite;
+            box-shadow: 0 0 5px rgba(255, 0, 60, 0.3);
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        .panel-footer {
+            padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.95);
+            border-top: 1px solid rgba(255, 0, 60, 0.1);
+            text-align: center;
+            font-size: 10px;
+            color: #ff003c;
+            letter-spacing: 1px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Scrollbar */
+        .panel-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .panel-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .panel-content::-webkit-scrollbar-thumb {
+            background: #ff003c;
+            box-shadow: 0 0 5px rgba(255, 0, 60, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="login-screen">
+        <div class="ascii-title">
+███╗   ███╗ █████╗ ███████╗██╗  ██╗ ██████╗  █████╗ ██████╗ ██╗██╗  ██╗
+████╗ ████║██╔══██╗██╔════╝██║  ██║██╔═══██╗██╔══██╗██╔══██╗██║██║ ██╔╝
+██╔████╔██║███████║███████╗███████║██║   ██║███████║██████╔╝██║█████╔╝ 
+██║╚██╔╝██║██╔══██║╚════██║██╔══██║██║   ██║██╔══██║██╔═══╝ ██║██╔═██╗ 
+██║ ╚═╝ ██║██║  ██║███████║██║  ██║╚██████╔╝██║  ██║██║     ██║██║  ██╗
+╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚══▀▀═╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝
+        </div>
+
+        <form class="login-form" onsubmit="handleLogin(event)">
+            <div class="login-field">
+                <label>MASTER PASSWORD:</label>
+                <input type="password" id="passwordInput" class="login-input" placeholder="••••••••••" required>
+            </div>
+            <button type="submit" class="login-button">AUTHENTICATE</button>
+        </form>
+
+        <div style="margin-top: 40px; text-align: center; color: #ff003c; font-size: 12px; letter-spacing: 1px;">
+            <p>Unauthorized access is prohibited</p>
+            <p>All activities are monitored and logged</p>
+        </div>
+    </div>
+
+    <!-- PANEL MAIN -->
+    <div id="panelContainer" class="panel-container hidden">
+        <div class="panel-header">
+            <div class="panel-title">
+███╗   ███╗ █████╗ ███████╗██╗  ██╗ ██████╗  █████╗ ██████╗ ██╗██╗  ██╗
+████╗ ████║██╔══██╗██╔════╝██║  ██║██╔═══██╗██╔══██╗██╔══██╗██║██║ ██╔╝
+██╔████╔██║███████║███████╗███████║██║   ██║███████║██████╔╝██║█████╔╝ 
+██║╚██╔╝██║██╔══██║╚════██║██╔══██║██║   ██║██╔══██║██╔═══╝ ██║██╔═██╗ 
+██║ ╚═╝ ██║██║  ██║███████║██║  ██║╚██████╔╝██║  ██║██║     ██║██║  ██╗
+╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚══▀▀═╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝
+            </div>
+            <div class="panel-menu">
+                <div class="menu-item">Discord</div>
+                <div class="menu-item">Tools-Menu</div>
+                <div class="menu-item">Utilities</div>
+            </div>
+            <div class="panel-submenu">
+                <span>[01] Discord Menu</span>
+                <span>[02] Tools Menu</span>
+                <span>[03] Utilities Menu</span>
+            </div>
+            <div class="panel-controls">
+                <span>[N] Next Page</span>
+                <span>[B] Back</span>
+                <span>[C] Credits</span>
+                <span>[Q] Quit</span>
+            </div>
+        </div>
+
+        <div id="panelContent" class="panel-content"></div>
+
+        <div class="panel-input-area">
+            <span class="prompt">~$ </span>
+            <input type="text" id="commandInput" class="terminal-input" placeholder="">
+            <span class="cursor"></span>
+        </div>
+
+        <div class="panel-footer">
+            <p>MASHOQAPIK PANEL v1.0 | PERSONAL USE ONLY</p>
+        </div>
+    </div>
+
+    <!-- Hidden file input for uploads -->
+    <input type="file" id="fileInput" style="display: none;">
+
+    <script>
+        const MASTER_PASSWORD = 'Gay4Shoqapik';
+
+        const fileSystem = {
+            '01': {
+                name: 'Discord',
+                files: [
+                    { name: 'token_dump.fake', content: '[REDACTED] Discord API tokens' },
+                    { name: 'user_list.txt', content: 'Discord users database (fake)' },
+                    { name: 'webhooks.json', content: '{"webhooks": []}' }
+                ]
+            },
+            '02': {
+                name: 'Tools-Menu',
+                files: [
+                    { name: 'scanner.sh', content: '#!/bin/bash\n# Fake scanner' },
+                    { name: 'exploit.py', content: '# Fake exploit script' },
+                    { name: 'config.ini', content: '[tools]\nverbose=true' }
+                ]
+            },
+            '03': {
+                name: 'Utilities',
+                files: [
+                    { name: 'converter.exe', content: '[BINARY] Fake utility' },
+                    { name: 'helper.dll', content: '[BINARY] Fake library' }
+                ]
+            },
+            '04': {
+                name: 'Database',
+                files: [
+                    { name: 'users.db', content: '[DATABASE] User records' },
+                    { name: 'backup.sql', content: 'SELECT * FROM users;' },
+                    { name: 'analysis.csv', content: 'id,username,status\n1,user1,active' }
+                ]
+            },
+            '05': {
+                name: 'Logs',
+                files: [
+                    { name: 'system.log', content: '[2025-12-02 13:00:00] System started' },
+                    { name: 'error.log', content: '[ERROR] Connection timeout' },
+                    { name: 'access.log', content: '192.168.1.1 - GET /api/users' }
+                ]
+            },
+            '06': {
+                name: 'Storage',
+                files: []
+            }
+        };
+
+        let currentPath = null;
+        let uploadedFiles = new Map();
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const password = document.getElementById('passwordInput').value;
+            if (password === MASTER_PASSWORD) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('panelContainer').classList.remove('hidden');
+                showMainMenu();
+                document.getElementById('commandInput').focus();
+            } else {
+                alert('ACCESS DENIED');
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function showMainMenu() {
+            currentPath = null;
+            const content = document.getElementById('panelContent');
+            content.innerHTML = '';
+            
+            const lines = [
+                '',
+                '┌─ DIRECTORY LISTING ─────────────────────────────────────┐',
+                '│ [01] 📁 Discord                                         │',
+                '│ [02] 📁 Tools-Menu                                      │',
+                '│ [03] 📁 Utilities                                       │',
+                '│ [04] 📁 Database                                        │',
+                '│ [05] 📁 Logs                                            │',
+                '│ [06] 📁 Storage                                         │',
+                '└─────────────────────────────────────────────────────────┘',
+                ''
+            ];
+
+            lines.forEach(line => {
+                const div = document.createElement('div');
+                div.className = 'content-line';
+                div.textContent = line;
+                content.appendChild(div);
+            });
+        }
+
+        function showFolder(folderNum) {
+            const folder = fileSystem[folderNum];
+            if (!folder) return;
+
+            currentPath = folderNum;
+            const content = document.getElementById('panelContent');
+            content.innerHTML = '';
+
+            const lines = [
+                '',
+                `┌─ ${folder.name.toUpperCase()} ─────────────────────────────────────┐`,
+                '│ [00] 📁 .. (Back to menu)                               │'
+            ];
+
+            folder.files.forEach((file, idx) => {
+                const num = String(idx + 1).padStart(2, '0');
+                const icon = '📄';
+                const name = file.name.padEnd(40);
+                lines.push(`│ [${num}] ${icon} ${name}│`);
+            });
+
+            lines.push('└─────────────────────────────────────────────────────────┘');
+            lines.push('');
+
+            lines.forEach(line => {
+                const div = document.createElement('div');
+                div.className = 'content-line';
+                div.textContent = line;
+                content.appendChild(div);
+            });
+
+            document.getElementById('panelContent').scrollTop = document.getElementById('panelContent').scrollHeight;
+        }
+
+        function handleCommand(cmd) {
+            const trimmed = cmd.trim();
+            const content = document.getElementById('panelContent');
+
+            if (trimmed === '') return;
+
+            const line = document.createElement('div');
+            line.className = 'content-line';
+            line.textContent = '~$ ' + trimmed;
+            content.appendChild(line);
+
+            if (!currentPath) {
+                // Main menu
+                const num = parseInt(trimmed);
+                if (num >= 1 && num <= 6) {
+                    showFolder(String(num).padStart(2, '0'));
+                } else {
+                    const errLine = document.createElement('div');
+                    errLine.className = 'content-line';
+                    errLine.textContent = '> Invalid folder number';
+                    content.appendChild(errLine);
+                }
+            } else {
+                // Inside folder
+                const folder = fileSystem[currentPath];
+                const num = parseInt(trimmed);
+
+                if (num === 0) {
+                    showMainMenu();
+                } else if (num >= 1 && num <= folder.files.length) {
+                    const file = folder.files[num - 1];
+                    const fileContent = document.createElement('div');
+                    fileContent.className = 'content-line';
+                    fileContent.textContent = `\n╔════ ${file.name} ════╗\n${file.content}\n╚════════════════════╝\n`;
+                    content.appendChild(fileContent);
+                } else if (trimmed === 'upload') {
+                    document.getElementById('fileInput').click();
+                } else {
+                    const errLine = document.createElement('div');
+                    errLine.className = 'content-line';
+                    errLine.textContent = '> Invalid command';
+                    content.appendChild(errLine);
+                }
+            }
+
+            document.getElementById('panelContent').scrollTop = document.getElementById('panelContent').scrollHeight;
+        }
+
+        document.getElementById('commandInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = document.getElementById('commandInput').value;
+                handleCommand(cmd);
+                document.getElementById('commandInput').value = '';
+            }
+        });
+
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                uploadedFiles.set(file.name, file);
+                
+                if (currentPath === '06') {
+                    fileSystem['06'].files.push({ name: file.name, content: '[UPLOADED FILE]' });
+                    showFolder('06');
+                }
+
+                const content = document.getElementById('panelContent');
+                const line = document.createElement('div');
+                line.className = 'content-line';
+                line.textContent = `> File uploaded: ${file.name}`;
+                content.appendChild(line);
+            }
+        });
+
+        showMainMenu();
+    </script>
+</body>
+</html>
