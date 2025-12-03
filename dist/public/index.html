@@ -63,52 +63,83 @@
         }
 
         .ascii-title {
-            font-size: 48px;
-            font-weight: 700;
+            font-size: 72px;
+            font-weight: 900;
             line-height: 1.2;
-            white-space: pre;
+            white-space: nowrap;
             background: linear-gradient(90deg, #ff003c, #7a00ff, #00bfff, #ff003c);
             background-size: 300% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px rgba(255, 0, 60, 0.5), 0 0 20px rgba(122, 0, 255, 0.5);
+            text-shadow: 0 0 40px rgba(255, 0, 60, 0.7), 0 0 30px rgba(122, 0, 255, 0.7), 0 0 20px rgba(0, 191, 255, 0.5);
             margin-bottom: 60px;
             text-align: center;
-            letter-spacing: 1px;
-            font-family: 'Courier New', monospace;
-            animation: gradientShift 4s ease-in-out infinite, titleGlitch 0.3s ease-in-out infinite;
+            letter-spacing: 4px;
+            font-family: 'Orbitron', sans-serif;
+            animation: gradientShift 4s ease-in-out infinite, titlePulse 2s ease-in-out infinite, titleFloat 3s ease-in-out infinite;
         }
 
-        @keyframes titleGlitch {
-            0%, 100% { text-shadow: 0 0 30px rgba(255, 0, 60, 0.5), 0 0 20px rgba(122, 0, 255, 0.5); }
-            50% { text-shadow: 0 0 50px rgba(255, 0, 60, 0.8), 0 0 40px rgba(122, 0, 255, 0.8), 0 0 20px rgba(0, 191, 255, 0.5); }
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 0 0 40px rgba(255, 0, 60, 0.7), 0 0 30px rgba(122, 0, 255, 0.7); }
+            50% { text-shadow: 0 0 60px rgba(255, 0, 60, 1), 0 0 50px rgba(122, 0, 255, 1), 0 0 30px rgba(0, 191, 255, 0.8); }
         }
 
-        /* Animation d'entrée guns.lol style */
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Animation d'entrée impressionnante */
 
         .login-screen {
-            animation: pageLoadScan 1.5s ease-out;
+            animation: epicLoadIn 2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        @keyframes pageLoadScan {
+        @keyframes epicLoadIn {
             0% {
-                clip-path: inset(0 0 100% 0);
+                clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
                 opacity: 0;
+                transform: scale(0.8) rotateY(90deg);
             }
-            50% {
-                clip-path: inset(0 0 50% 0);
-                opacity: 0.5;
+            30% {
+                clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%);
+                opacity: 0.6;
+            }
+            60% {
+                clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+                opacity: 0.9;
+                transform: scale(1.05) rotateY(0deg);
             }
             100% {
-                clip-path: inset(0 0 0 0);
+                clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
                 opacity: 1;
+                transform: scale(1) rotateY(0deg);
             }
         }
 
         @keyframes gradientShift {
             0%, 100% { background-position: 0% center; }
             50% { background-position: 100% center; }
+        }
+
+        /* Ligne de scan animée */
+
+        @keyframes scanlineMove {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .scanline-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff003c, transparent);
+            animation: scanlineMove 1.5s linear;
+            pointer-events: none;
+            z-index: 1000;
         }
 
         /* Glitch effect au chargement */
@@ -538,14 +569,7 @@ Error generating stack: `+l.message+`
 
     <!-- LOGIN SCREEN -->
     <div class="login-screen" id="loginScreen">
-        <div class="ascii-title">
-███╗   ███╗ █████╗ ███████╗██╗  ██╗ ██████╗ 
-████╗ ████║██╔══██╗██╔════╝██║  ██║██╔═══██╗
-██╔████╔██║███████║███████╗███████║██║   ██║
-██║╚██╔╝██║██╔══██║╚════██║██╔══██║██║▄▄██║
-██║ ╚═╝ ██║██║  ██║███████║██║  ██║╚██████╔╝
-╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚══════╝
-        </div>
+        <div class="ascii-title">MASHOQAPIK</div>
         <div class="login-form">
             <div class="login-field">
                 <label>MASTER PASSWORD:</label>
@@ -562,14 +586,7 @@ Error generating stack: `+l.message+`
     <!-- PANEL MAIN -->
     <div class="panel-container hidden" id="panelContainer">
         <div class="panel-header">
-            <div class="panel-title">
-███╗   ███╗ █████╗ ███████╗██╗  ██╗ ██████╗ 
-████╗ ████║██╔══██╗██╔════╝██║  ██║██╔═══██╗
-██╔████╔██║███████║███████╗███████║██║   ██║
-██║╚██╔╝██║██╔══██║╚════██║██╔══██║██║▄▄██║
-██║ ╚═╝ ██║██║  ██║███████║██║  ██║╚██████╔╝
-╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚══════╝
-            </div>
+            <div class="panel-title" style="font-size: 48px; font-weight: 900; letter-spacing: 3px; background: linear-gradient(90deg, #ff003c, #7a00ff, #00bfff, #ff003c); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientShift 4s ease-in-out infinite, titlePulse 2s ease-in-out infinite; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 40px rgba(255, 0, 60, 0.7), 0 0 30px rgba(122, 0, 255, 0.7);">MASHOQAPIK</div>
             <div class="panel-menu" style="display: flex; justify-content: center; padding: 15px; background: rgba(0, 0, 0, 0.8); border: 1px solid #7a00ff; border-right: 1px solid #00bfff; border-bottom: 1px solid #ff003c;">
                 <div style="font-size: 14px; line-height: 1.1; white-space: pre; background: linear-gradient(90deg, #ff003c, #7a00ff, #00bfff, #ff003c); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientShift 4s ease-in-out infinite; text-shadow: 0 0 30px rgba(255, 0, 60, 0.5), 0 0 20px rgba(122, 0, 255, 0.5); letter-spacing: 1px; font-weight: 700;">
  ███▄ ▄███▓ ▄▄▄        ██████  ██░ ██  ▒█████    █████   ▄▄▄       ██▓███   ██▓ ██ ▄█▀
