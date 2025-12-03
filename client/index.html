@@ -91,6 +91,17 @@
             50% { transform: translateY(-10px); }
         }
 
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Animation d'entrée impressionnante */
         .login-screen {
             animation: epicLoadIn 2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -488,8 +499,13 @@
     <!-- ANIMATION D'ENTRÉE -->
     <div class="entry-animation hidden" id="entryAnimation">
         <div class="flash-overlay"></div>
-        <div class="glitch-text">INITIALIZING...</div>
-        <div class="loading-lines">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 90%;">
+            <div class="intro-text" style="font-size: 32px; color: #ff003c; margin-bottom: 30px; font-weight: 700; letter-spacing: 2px; animation: fadeInUp 1s ease-out;">Mashoqapik Présente :</div>
+            <div class="intro-text" style="font-size: 48px; background: linear-gradient(90deg, #ff003c, #7a00ff, #00bfff, #ff003c); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientShift 4s ease-in-out infinite, fadeInUp 1.5s ease-out; margin-bottom: 30px; font-weight: 900; letter-spacing: 3px;">Cybersécurité</div>
+            <div class="intro-text" style="font-size: 18px; color: #7a00ff; margin-bottom: 20px; animation: fadeInUp 2s ease-out;">Par : SecNumacademie</div>
+            <div class="intro-text" style="font-size: 18px; color: #00bfff; animation: fadeInUp 2.5s ease-out;">SensCyber Cybermalveillance</div>
+        </div>
+        <div class="loading-lines" style="position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);">
             <div class="line"></div>
             <div class="line"></div>
             <div class="line"></div>
@@ -500,7 +516,7 @@
 
     <!-- LOGIN SCREEN -->
     <div class="login-screen" id="loginScreen">
-        <div class="ascii-title">MASHOQAPIK</div>
+        <div class="ascii-title" style="font-family: 'Courier New', monospace; letter-spacing: 8px; font-weight: 700;">𝙈𝙖𝙨𝙝𝙤𝙦𝙖𝙥𝙞𝙠</div>
         <div class="login-form">
             <div class="login-field">
                 <label>MASTER PASSWORD:</label>
