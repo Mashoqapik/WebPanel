@@ -55,6 +55,7 @@
             align-items: center;
             justify-content: center;
             background: #000000;
+            position: relative;
         }
 
         .login-screen.hidden {
@@ -62,24 +63,61 @@
         }
 
         .ascii-title {
-            font-size: 28px;
+            font-size: 48px;
             font-weight: 700;
-            line-height: 1.1;
+            line-height: 1.2;
             white-space: pre;
-            background: linear-gradient(90deg, #00bfff, #7a00ff, #ff003c, #00bfff);
+            background: linear-gradient(90deg, #ff003c, #7a00ff, #00bfff, #ff003c);
             background-size: 300% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: gradientShift 4s ease-in-out infinite;
-            text-shadow: 0 0 30px rgba(255, 0, 60, 0.5);
-            margin-bottom: 40px;
+            text-shadow: 0 0 30px rgba(255, 0, 60, 0.5), 0 0 20px rgba(122, 0, 255, 0.5);
+            margin-bottom: 60px;
             text-align: center;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+            animation: gradientShift 4s ease-in-out infinite, titleGlitch 0.3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlitch {
+            0%, 100% { text-shadow: 0 0 30px rgba(255, 0, 60, 0.5), 0 0 20px rgba(122, 0, 255, 0.5); }
+            50% { text-shadow: 0 0 50px rgba(255, 0, 60, 0.8), 0 0 40px rgba(122, 0, 255, 0.8), 0 0 20px rgba(0, 191, 255, 0.5); }
+        }
+
+        /* Animation d'entrée guns.lol style */
+        .login-screen {
+            animation: pageLoadScan 1.5s ease-out;
+        }
+
+        @keyframes pageLoadScan {
+            0% {
+                clip-path: inset(0 0 100% 0);
+                opacity: 0;
+            }
+            50% {
+                clip-path: inset(0 0 50% 0);
+                opacity: 0.5;
+            }
+            100% {
+                clip-path: inset(0 0 0 0);
+                opacity: 1;
+            }
         }
 
         @keyframes gradientShift {
             0%, 100% { background-position: 0% center; }
             50% { background-position: 100% center; }
+        }
+
+        /* Glitch effect au chargement */
+        @keyframes glitchLoad {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
         }
 
         .login-form {
@@ -142,6 +180,94 @@
             transform: scale(1.02);
         }
 
+        /* ANIMATION D'ENTRÉE */
+        .entry-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .entry-animation.hidden {
+            display: none;
+        }
+
+        .glitch-text {
+            font-size: 24px;
+            color: #ff003c;
+            font-weight: 700;
+            letter-spacing: 3px;
+            animation: glitch 0.3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { 
+                text-shadow: -2px 0 #00bfff, 2px 0 #7a00ff;
+                transform: translate(-2px, 0);
+            }
+            50% {
+                text-shadow: 2px 0 #00bfff, -2px 0 #7a00ff;
+                transform: translate(2px, 0);
+            }
+            100% {
+                text-shadow: -2px 0 #00bfff, 2px 0 #7a00ff;
+                transform: translate(-2px, 0);
+            }
+        }
+
+        .loading-lines {
+            width: 200px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .line {
+            height: 2px;
+            background: #ff003c;
+            width: 0;
+            animation: lineLoad 0.6s ease-in-out forwards;
+            box-shadow: 0 0 5px rgba(255, 0, 60, 0.5);
+        }
+
+        .line:nth-child(1) { animation-delay: 0s; }
+        .line:nth-child(2) { animation-delay: 0.1s; }
+        .line:nth-child(3) { animation-delay: 0.2s; }
+        .line:nth-child(4) { animation-delay: 0.3s; }
+        .line:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes lineLoad {
+            0% { width: 0; }
+            100% { width: 200px; }
+        }
+
+        .flash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ff003c;
+            opacity: 0;
+            animation: flashEffect 0.5s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes flashEffect {
+            0% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+
         /* PANEL MAIN */
         .panel-container {
             width: 100vw;
@@ -149,6 +275,12 @@
             display: flex;
             flex-direction: column;
             background: #000000;
+            animation: panelFadeIn 0.5s ease-out;
+        }
+
+        @keyframes panelFadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         .panel-container.hidden {
@@ -213,6 +345,17 @@
             font-size: 11px;
             letter-spacing: 1px;
             text-shadow: 0 0 5px rgba(255, 0, 60, 0.3);
+            cursor: pointer;
+        }
+
+        .control-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .control-item:hover {
+            color: #7a00ff;
+            text-shadow: 0 0 10px rgba(122, 0, 255, 0.5);
         }
 
         .panel-content {
@@ -302,282 +445,300 @@
 
         .panel-content::-webkit-scrollbar-thumb {
             background: #ff003c;
-            box-shadow: 0 0 5px rgba(255, 0, 60, 0.3);
+            border-radius: 4px;
+        }
+
+        .panel-content::-webkit-scrollbar-thumb:hover {
+            background: #7a00ff;
         }
     </style>
 </head>
 <body>
-    <!-- LOGIN SCREEN -->
-    <div id="loginScreen" class="login-screen">
-        <div class="ascii-title">
-███╗   ███╗ █████╗ ███████╗██╗  ██╗ ██████╗  █████╗ ██████╗ ██╗██╗  ██╗
-████╗ ████║██╔══██╗██╔════╝██║  ██║██╔═══██╗██╔══██╗██╔══██╗██║██║ ██╔╝
-██╔████╔██║███████║███████╗███████║██║   ██║███████║██████╔╝██║█████╔╝ 
-██║╚██╔╝██║██╔══██║╚════██║██╔══██║██║   ██║██╔══██║██╔═══╝ ██║██╔═██╗ 
-██║ ╚═╝ ██║██║  ██║███████║██║  ██║╚██████╔╝██║  ██║██║     ██║██║  ██╗
-╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚══▀▀═╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝
+    <!-- ANIMATION D'ENTRÉE -->
+    <div class="entry-animation hidden" id="entryAnimation">
+        <div class="flash-overlay"></div>
+        <div class="glitch-text">INITIALIZING...</div>
+        <div class="loading-lines">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
         </div>
+    </div>
 
-        <form class="login-form" onsubmit="handleLogin(event)">
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="ascii-title">
+███╗   ███╗ █████╗ ███████╗██╗  ██╗ ██████╗ 
+████╗ ████║██╔══██╗██╔════╝██║  ██║██╔═══██╗
+██╔████╔██║███████║███████╗███████║██║   ██║
+██║╚██╔╝██║██╔══██║╚════██║██╔══██║██║▄▄██║
+██║ ╚═╝ ██║██║  ██║███████║██║  ██║╚██████╔╝
+╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚══════╝
+        </div>
+        <div class="login-form">
             <div class="login-field">
                 <label>MASTER PASSWORD:</label>
-                <input type="password" id="passwordInput" class="login-input" placeholder="••••••••••" required>
+                <input type="password" class="login-input" id="passwordInput" placeholder="••••••••••">
             </div>
-            <button type="submit" class="login-button">AUTHENTICATE</button>
-        </form>
-
-        <div style="margin-top: 40px; text-align: center; color: #ff003c; font-size: 12px; letter-spacing: 1px;">
-            <p>Unauthorized access is prohibited</p>
-            <p>All activities are monitored and logged</p>
+            <button class="login-button" id="loginButton">AUTHENTICATE</button>
+            <div style="color: #ff003c; font-size: 12px; text-align: center; text-shadow: 0 0 5px rgba(255, 0, 60, 0.3);">
+                Unauthorized access is prohibited<br>
+                All activities are monitored and logged
+            </div>
         </div>
     </div>
 
     <!-- PANEL MAIN -->
-    <div id="panelContainer" class="panel-container hidden">
+    <div class="panel-container hidden" id="panelContainer">
         <div class="panel-header">
             <div class="panel-title">
-███╗   ███╗ █████╗ ███████╗██╗  ██╗ ██████╗  █████╗ ██████╗ ██╗██╗  ██╗
-████╗ ████║██╔══██╗██╔════╝██║  ██║██╔═══██╗██╔══██╗██╔══██╗██║██║ ██╔╝
-██╔████╔██║███████║███████╗███████║██║   ██║███████║██████╔╝██║█████╔╝ 
-██║╚██╔╝██║██╔══██║╚════██║██╔══██║██║   ██║██╔══██║██╔═══╝ ██║██╔═██╗ 
-██║ ╚═╝ ██║██║  ██║███████║██║  ██║╚██████╔╝██║  ██║██║     ██║██║  ██╗
-╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚══▀▀═╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝
+███╗   ███╗ █████╗ ███████╗██╗  ██╗ ██████╗ 
+████╗ ████║██╔══██╗██╔════╝██║  ██║██╔═══██╗
+██╔████╔██║███████║███████╗███████║██║   ██║
+██║╚██╔╝██║██╔══██║╚════██║██╔══██║██║▄▄██║
+██║ ╚═╝ ██║██║  ██║███████║██║  ██║╚██████╔╝
+╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚══════╝
             </div>
-            <div class="panel-menu">
-                <div class="menu-item">Discord</div>
-                <div class="menu-item">Tools-Menu</div>
-                <div class="menu-item">Utilities</div>
+            <div class="panel-menu" style="display: flex; justify-content: center; padding: 15px; background: rgba(0, 0, 0, 0.8); border: 1px solid #7a00ff; border-right: 1px solid #00bfff; border-bottom: 1px solid #ff003c;">
+                <div style="font-size: 14px; line-height: 1.1; white-space: pre; background: linear-gradient(90deg, #ff003c, #7a00ff, #00bfff, #ff003c); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientShift 4s ease-in-out infinite; text-shadow: 0 0 30px rgba(255, 0, 60, 0.5), 0 0 20px rgba(122, 0, 255, 0.5); letter-spacing: 1px; font-weight: 700;">
+ ███▄ ▄███▓ ▄▄▄        ██████  ██░ ██  ▒█████    █████   ▄▄▄       ██▓███   ██▓ ██ ▄█▀
+▓██▒▀█▀ ██▒▒████▄    ▒██    ▒ ▓██░ ██▒▒██▒  ██▒▒██▓  ██▒▒████▄    ▓██░  ██▒▓██▒ ██▄█▒ 
+▓██    ▓██░▒██  ▀█▄  ░ ▓██▄   ▒██▀▀██░▒██░  ██▒▒██▒  ██░▒██  ▀█▄  ▓██░ ██▓▒▒██▒▓███▄░ 
+▒██    ▒██ ░██▄▄▄▄██   ▒   ██▒░▓█ ░██ ▒██   ██░░██  █▀ ░░██▄▄▄▄██ ▒██▄█▓▒ ▒░██░▓██ █▄ 
+▒██▒   ░██▒ ▓█   ▓██▒▒██████▒▒░▓█▒░██▓░ ████▓▒░░▒███▒█▄  ▓█   ▓██▒▒██▒ ░  ░░██░▒██▒ █▄
+░ ▒░   ░  ░ ▒▒   ▓▒█░▒ ▒▓▒ ▒ ░ ▒ ░░▒░ ░░ ▒░▒░▒░ ░░ ▒▒░ ▒  ▒▒   ▓▒█░▒▓▒░ ░  ░░▓  ▒ ▒▒ ▓▒
+░  ░      ░  ▒   ▒▒ ░░ ░▒  ░ ░ ▒ ░▒░ ░  ░ ▒ ▒░  ░ ▒░  ░   ▒   ▒▒ ░░▒ ░      ▒ ░░ ░▒ ▒░
+░      ░     ░   ▒   ░  ░  ░   ░  ░░ ░░ ░ ░ ▒     ░   ░   ░   ▒   ░░        ▒ ░░ ░░ ░ 
+       ░         ░  ░      ░   ░  ░  ░    ░ ░      ░          ░  ░          ░  ░  ░   
+                </div>
             </div>
-            <div class="panel-submenu">
-                <span>[01] Discord Menu</span>
-                <span>[02] Tools Menu</span>
-                <span>[03] Utilities Menu</span>
+            <div class="panel-submenu" id="submenu" style="font-size: 18px; font-weight: 900; letter-spacing: 3px; background: linear-gradient(90deg, #ff003c, #7a00ff, #00bfff, #ff003c); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientShift 4s ease-in-out infinite; text-shadow: 0 0 30px rgba(255, 0, 60, 0.5), 0 0 20px rgba(122, 0, 255, 0.5); text-align: center; padding: 15px;">
+                ▌ MASHO-TOOLS ▌
             </div>
             <div class="panel-controls">
-                <span>[N] Next Page</span>
-                <span>[B] Back</span>
-                <span>[C] Credits</span>
-                <span>[Q] Quit</span>
+                <span class="control-item" onclick="nextPage()">[N] Next Page</span>
+                <span class="control-item" onclick="backPage()">[B] Back</span>
+                <span class="control-item" onclick="showCredits()">[C] Credits</span>
+                <span class="control-item" onclick="logout()">[Q] Quit</span>
             </div>
         </div>
 
-        <div id="panelContent" class="panel-content"></div>
+        <div class="panel-content" id="panelContent">
+            <div class="content-line">[SYSTEM] Welcome to MASHOQAPIK BUTCHER PANEL v1.0</div>
+            <div class="content-line">[SYSTEM] Type a command or number to navigate</div>
+            <div class="content-line">[SYSTEM] Type 'help' for available commands</div>
+            <div class="content-line"></div>
+        </div>
 
         <div class="panel-input-area">
-            <span class="prompt">~$ </span>
-            <input type="text" id="commandInput" class="terminal-input" placeholder="">
+            <span class="prompt">~$</span>
+            <input type="text" class="terminal-input" id="terminalInput" placeholder="Enter command...">
             <span class="cursor"></span>
         </div>
 
         <div class="panel-footer">
-            <p>MASHOQAPIK PANEL v1.0 | PERSONAL USE ONLY</p>
+            MASHOQAPIK BUTCHER PANEL | v1.0 | SECURE MODE ENABLED
         </div>
     </div>
 
-    <!-- Hidden file input for uploads -->
-    <input type="file" id="fileInput" style="display: none;">
-
     <script>
-        const MASTER_PASSWORD = 'Gay4Shoqapik';
+        const loginScreen = document.getElementById('loginScreen');
+        const panelContainer = document.getElementById('panelContainer');
+        const entryAnimation = document.getElementById('entryAnimation');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginButton = document.getElementById('loginButton');
+        const terminalInput = document.getElementById('terminalInput');
+        const panelContent = document.getElementById('panelContent');
 
-        const fileSystem = {
-            '01': {
-                name: 'Discord',
-                files: [
-                    { name: 'token_dump.fake', content: '[REDACTED] Discord API tokens' },
-                    { name: 'user_list.txt', content: 'Discord users database (fake)' },
-                    { name: 'webhooks.json', content: '{"webhooks": []}' }
-                ]
+        const CORRECT_PASSWORD = 'Gay4Shoqapik';
+        let currentPage = 1;
+        const pages = {
+            1: {
+                submenu: '[01] Discord Menu | [02] Tools Menu | [03] Utilities Menu',
+                content: `[SYSTEM] Welcome to MASHOQAPIK BUTCHER PANEL v1.0
+[SYSTEM] Type a command or number to navigate
+[SYSTEM] Type 'help' for available commands
+
+[01] Discord - Communication & Messaging
+[02] Tools Menu - Utility Tools
+[03] Utilities - System Utilities
+[04] Database - Data Storage
+[05] Logs - System Logs
+[06] Storage - File Storage`
             },
-            '02': {
-                name: 'Tools-Menu',
-                files: [
-                    { name: 'scanner.sh', content: '#!/bin/bash\n# Fake scanner' },
-                    { name: 'exploit.py', content: '# Fake exploit script' },
-                    { name: 'config.ini', content: '[tools]\nverbose=true' }
-                ]
+            2: {
+                submenu: '[04] Database | [05] Logs | [06] Storage',
+                content: `[SYSTEM] Page 2 - Additional Directories
+
+[04] Database - Encrypted Data Storage
+    ├─ users.db
+    ├─ config.db
+    └─ cache.db
+
+[05] Logs - System Activity Logs
+    ├─ system.log
+    ├─ access.log
+    └─ error.log
+
+[06] Storage - Personal File Storage
+    ├─ Documents/
+    ├─ Images/
+    └─ Archives/`
             },
-            '03': {
-                name: 'Utilities',
-                files: [
-                    { name: 'converter.exe', content: '[BINARY] Fake utility' },
-                    { name: 'helper.dll', content: '[BINARY] Fake library' }
-                ]
-            },
-            '04': {
-                name: 'Database',
-                files: [
-                    { name: 'users.db', content: '[DATABASE] User records' },
-                    { name: 'backup.sql', content: 'SELECT * FROM users;' },
-                    { name: 'analysis.csv', content: 'id,username,status\n1,user1,active' }
-                ]
-            },
-            '05': {
-                name: 'Logs',
-                files: [
-                    { name: 'system.log', content: '[2025-12-02 13:00:00] System started' },
-                    { name: 'error.log', content: '[ERROR] Connection timeout' },
-                    { name: 'access.log', content: '192.168.1.1 - GET /api/users' }
-                ]
-            },
-            '06': {
-                name: 'Storage',
-                files: []
+            3: {
+                submenu: '[07] Config | [08] Scrap | [09] Archive',
+                content: `[SYSTEM] Page 3 - Configuration & Archives
+
+[07] Config - System Configuration
+    ├─ settings.conf
+    ├─ network.conf
+    └─ security.conf
+
+[08] Scrap - Temporary Files
+    ├─ temp_001.tmp
+    ├─ temp_002.tmp
+    └─ temp_003.tmp
+
+[09] Archive - Archived Data
+    ├─ backup_2024.zip
+    ├─ archive_old.tar
+    └─ history.db`
             }
         };
 
-        let currentPath = null;
-        let uploadedFiles = new Map();
+        // Login
+        loginButton.addEventListener('click', authenticate);
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') authenticate();
+        });
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const password = document.getElementById('passwordInput').value;
-            if (password === MASTER_PASSWORD) {
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('panelContainer').classList.remove('hidden');
-                showMainMenu();
-                document.getElementById('commandInput').focus();
+        function authenticate() {
+            if (passwordInput.value === CORRECT_PASSWORD) {
+                startEntryAnimation();
             } else {
-                alert('ACCESS DENIED');
-                document.getElementById('passwordInput').value = '';
+                passwordInput.style.borderColor = '#ff0000';
+                setTimeout(() => {
+                    passwordInput.style.borderColor = '#ff003c';
+                }, 300);
             }
         }
 
-        function showMainMenu() {
-            currentPath = null;
-            const content = document.getElementById('panelContent');
-            content.innerHTML = '';
-            
-            const lines = [
-                '',
-                '┌─ DIRECTORY LISTING ─────────────────────────────────────┐',
-                '│ [01] 📁 Discord                                         │',
-                '│ [02] 📁 Tools-Menu                                      │',
-                '│ [03] 📁 Utilities                                       │',
-                '│ [04] 📁 Database                                        │',
-                '│ [05] 📁 Logs                                            │',
-                '│ [06] 📁 Storage                                         │',
-                '└─────────────────────────────────────────────────────────┘',
-                ''
-            ];
+        function startEntryAnimation() {
+            loginScreen.classList.add('hidden');
+            entryAnimation.classList.remove('hidden');
 
-            lines.forEach(line => {
-                const div = document.createElement('div');
-                div.className = 'content-line';
-                div.textContent = line;
-                content.appendChild(div);
-            });
+            setTimeout(() => {
+                entryAnimation.classList.add('hidden');
+                panelContainer.classList.remove('hidden');
+                terminalInput.focus();
+            }, 1500);
         }
 
-        function showFolder(folderNum) {
-            const folder = fileSystem[folderNum];
-            if (!folder) return;
+        // Terminal Commands
+        terminalInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const command = terminalInput.value.trim().toLowerCase();
+                terminalInput.value = '';
 
-            currentPath = folderNum;
-            const content = document.getElementById('panelContent');
-            content.innerHTML = '';
+                addLine(`~$ ${command}`);
 
-            const lines = [
-                '',
-                `┌─ ${folder.name.toUpperCase()} ─────────────────────────────────────┐`,
-                '│ [00] 📁 .. (Back to menu)                               │'
-            ];
+                if (command === 'help') {
+                    addLine('[HELP] Available commands:');
+                    addLine('  ls - List current directory');
+                    addLine('  cd [number] - Enter directory');
+                    addLine('  cat [number] - View file');
+                    addLine('  clear - Clear terminal');
+                    addLine('  exit - Exit panel');
+                } else if (command === 'clear') {
+                    panelContent.innerHTML = '';
+                } else if (command === 'exit') {
+                    logout();
+                } else if (command.startsWith('cd ')) {
+                    const dir = command.substring(3);
+                    addLine(`[SYSTEM] Entering directory: ${dir}`);
+                } else if (command.startsWith('cat ')) {
+                    const file = command.substring(4);
+                    addLine(`[FILE] ${file}`);
+                    addLine('[CONTENT] File contents here...');
+                } else if (command === 'ls') {
+                    addLine('[DIRECTORY LISTING]');
+                    addLine('[01] Discord');
+                    addLine('[02] Tools-Menu');
+                    addLine('[03] Utilities');
+                } else {
+                    addLine(`[ERROR] Unknown command: ${command}`);
+                }
+            }
+        });
 
-            folder.files.forEach((file, idx) => {
-                const num = String(idx + 1).padStart(2, '0');
-                const icon = '📄';
-                const name = file.name.padEnd(40);
-                lines.push(`│ [${num}] ${icon} ${name}│`);
-            });
-
-            lines.push('└─────────────────────────────────────────────────────────┘');
-            lines.push('');
-
-            lines.forEach(line => {
-                const div = document.createElement('div');
-                div.className = 'content-line';
-                div.textContent = line;
-                content.appendChild(div);
-            });
-
-            document.getElementById('panelContent').scrollTop = document.getElementById('panelContent').scrollHeight;
-        }
-
-        function handleCommand(cmd) {
-            const trimmed = cmd.trim();
-            const content = document.getElementById('panelContent');
-
-            if (trimmed === '') return;
-
+        function addLine(text) {
             const line = document.createElement('div');
             line.className = 'content-line';
-            line.textContent = '~$ ' + trimmed;
-            content.appendChild(line);
-
-            if (!currentPath) {
-                // Main menu
-                const num = parseInt(trimmed);
-                if (num >= 1 && num <= 6) {
-                    showFolder(String(num).padStart(2, '0'));
-                } else {
-                    const errLine = document.createElement('div');
-                    errLine.className = 'content-line';
-                    errLine.textContent = '> Invalid folder number';
-                    content.appendChild(errLine);
-                }
-            } else {
-                // Inside folder
-                const folder = fileSystem[currentPath];
-                const num = parseInt(trimmed);
-
-                if (num === 0) {
-                    showMainMenu();
-                } else if (num >= 1 && num <= folder.files.length) {
-                    const file = folder.files[num - 1];
-                    const fileContent = document.createElement('div');
-                    fileContent.className = 'content-line';
-                    fileContent.textContent = `\n╔════ ${file.name} ════╗\n${file.content}\n╚════════════════════╝\n`;
-                    content.appendChild(fileContent);
-                } else if (trimmed === 'upload') {
-                    document.getElementById('fileInput').click();
-                } else {
-                    const errLine = document.createElement('div');
-                    errLine.className = 'content-line';
-                    errLine.textContent = '> Invalid command';
-                    content.appendChild(errLine);
-                }
-            }
-
-            document.getElementById('panelContent').scrollTop = document.getElementById('panelContent').scrollHeight;
+            line.textContent = text;
+            panelContent.appendChild(line);
+            panelContent.scrollTop = panelContent.scrollHeight;
         }
 
-        document.getElementById('commandInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const cmd = document.getElementById('commandInput').value;
-                handleCommand(cmd);
-                document.getElementById('commandInput').value = '';
+        function nextPage() {
+            if (currentPage < 3) {
+                currentPage++;
+                updatePage();
             }
-        });
+        }
 
-        document.getElementById('fileInput').addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                const file = e.target.files[0];
-                uploadedFiles.set(file.name, file);
-                
-                if (currentPath === '06') {
-                    fileSystem['06'].files.push({ name: file.name, content: '[UPLOADED FILE]' });
-                    showFolder('06');
-                }
-
-                const content = document.getElementById('panelContent');
-                const line = document.createElement('div');
-                line.className = 'content-line';
-                line.textContent = `> File uploaded: ${file.name}`;
-                content.appendChild(line);
+        function backPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePage();
             }
-        });
+        }
 
-        showMainMenu();
+        function updatePage() {
+            const page = pages[currentPage];
+            document.getElementById('submenu').textContent = page.submenu;
+            panelContent.innerHTML = '';
+            page.content.split('\n').forEach(line => addLine(line));
+        }
+
+        function showCredits() {
+            panelContent.innerHTML = '';
+            addLine('╔════════════════════════════════════════╗');
+            addLine('║         MASHOQAPIK BUTCHER PANEL       ║');
+            addLine('║              v1.0 CREDITS              ║');
+            addLine('╚════════════════════════════════════════╝');
+            addLine('');
+            addLine('DEVELOPED BY: Mashoqapik');
+            addLine('DESIGN: Cyberpunk Terminal UI');
+            addLine('TECHNOLOGY: HTML5 + CSS3 + JavaScript');
+            addLine('');
+            addLine('FEATURES:');
+            addLine('  • Multi-page navigation system');
+            addLine('  • Terminal-style interface');
+            addLine('  • Real-time file management');
+            addLine('  • Neon aesthetic animations');
+            addLine('');
+            addLine('SPECIAL THANKS TO:');
+            addLine('  • All users of MASHOQAPIK');
+            addLine('  • The cyberpunk community');
+            addLine('');
+            addLine('═══════════════════════════════════════');
+        }
+
+        function logout() {
+            panelContainer.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            passwordInput.value = '';
+            panelContent.innerHTML = '';
+            currentPage = 1;
+            passwordInput.focus();
+        }
+
+        // Focus on load
+        window.addEventListener('load', () => {
+            passwordInput.focus();
+        });
     </script>
 </body>
 </html>
